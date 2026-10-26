@@ -1,0 +1,13 @@
+# Datos personales y biométricos
+conductores.db
+cnn/dataset/
+
+# Entornos y temporales
+.venv-rostros/
+__pycache__/
+
+# Archivos que no son de este proyecto
+_viejo/
+odoo/
+odoo.rar
+backup-config-regional.reg
