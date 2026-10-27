@@ -1,3 +1,4 @@
+import sys
 import os
 import cv2
 import numpy as np
@@ -21,13 +22,16 @@ def recorte(gray, pts, idx, m=0.6):
 
 
 def main():
+    sesion = sys.argv[1] if len(sys.argv) > 1 else "s1"
+    carpeta = f"{DIR}/{sesion}"
     for t in ("abiertos", "cerrados"):
-        os.makedirs(f"{DIR}/{t}", exist_ok=True)
-    cont = {t: len(os.listdir(f"{DIR}/{t}")) for t in ("abiertos", "cerrados")}
+        os.makedirs(f"{carpeta}/{t}", exist_ok=True)
+    cont = {t: len(os.listdir(f"{carpeta}/{t}")) for t in ("abiertos", "cerrados")}
     malla = mp.solutions.face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True,
                                             min_detection_confidence=0.5, min_tracking_confidence=0.5)
     cam = cv2.VideoCapture(0)
     modo = None
+    print("Sesion:", sesion)
     print("a = guardar ABIERTOS   c = guardar CERRADOS   s = parar   q = salir")
     while True:
         ok, frame = cam.read()
@@ -42,9 +46,9 @@ def main():
             for idx in (OJO_I, OJO_D):
                 c = recorte(gray, pts, idx)
                 if c is not None:
-                    cv2.imwrite(f"{DIR}/{modo}/{cont[modo]}.png", c)
+                    cv2.imwrite(f"{carpeta}/{modo}/{cont[modo]}.png", c)
                     cont[modo] += 1
-        cv2.putText(frame, f"modo:{modo}  abiertos:{cont['abiertos']}  cerrados:{cont['cerrados']}",
+        cv2.putText(frame, f"{sesion}  modo:{modo}  abiertos:{cont['abiertos']}  cerrados:{cont['cerrados']}",
                     (15, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
         cv2.imshow("Capturar ojos - a/c/s/q", frame)
         k = cv2.waitKey(1) & 0xFF
@@ -58,7 +62,7 @@ def main():
             break
     cam.release()
     cv2.destroyAllWindows()
-    print("Guardado:", cont)
+    print("Guardado:", sesion, cont)
 
 
 if __name__ == "__main__":

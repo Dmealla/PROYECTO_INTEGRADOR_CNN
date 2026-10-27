@@ -9,16 +9,19 @@ DIR = "cnn/dataset"
 SALIDA = "cnn/ojos.onnx"
 
 
-def cargar():
+def cargar(sesiones):
     X, Y = [], []
-    for label, t in enumerate(("abiertos", "cerrados")):
-        d = f"{DIR}/{t}"
-        for f in os.listdir(d):
-            img = cv2.imread(os.path.join(d, f), cv2.IMREAD_GRAYSCALE)
-            if img is None:
+    for s in sesiones:
+        for label, t in enumerate(("abiertos", "cerrados")):
+            d = f"{DIR}/{s}/{t}"
+            if not os.path.isdir(d):
                 continue
-            X.append(cv2.resize(img, (24, 24)))
-            Y.append(label)
+            for f in os.listdir(d):
+                img = cv2.imread(os.path.join(d, f), cv2.IMREAD_GRAYSCALE)
+                if img is None:
+                    continue
+                X.append(cv2.resize(img, (24, 24)))
+                Y.append(label)
     X = np.array(X, dtype="float32").reshape(-1, 24, 24, 1) / 255.0
     Y = np.array(Y, dtype="float32")
     return X, Y
