@@ -156,6 +156,7 @@ def somnolencia(nombre, chat):
     cam = cv2.VideoCapture(0)
     ard = abrir_arduino()
     cerrado, alarma, micros, ultimo = None, False, 0, 0
+    sin_rostro = None
     hablar("Bienvenido " + nombre)
     while True:
         ok, frame = cam.read()
@@ -166,6 +167,7 @@ def somnolencia(nombre, chat):
         res = malla.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         estado, color = "Sin rostro", (150, 150, 150)
         if res.multi_face_landmarks:
+            sin_rostro = None
             face = res.multi_face_landmarks[0]
             lm = face.landmark
             pts = np.array([(p.x * w, p.y * h) for p in lm])
@@ -191,8 +193,9 @@ def somnolencia(nombre, chat):
                             ard.write(b"B")
                         if micros % config.MICROSUENOS_ALERTA == 0 and time.time() - ultimo > config.COOLDOWN:
                             ultimo = time.time()
-                            telegram(chat, "ALERTA de somnolencia: %s. Microsuenos: %d. Hora: %s" %
-                                     (nombre, micros, time.strftime("%H:%M")))
+                            msg = "ALERTA de somnolencia: %s. Microsuenos: %d. Hora: %s" % (
+                                nombre, micros, time.strftime("%H:%M"))
+                            threading.Thread(target=telegram, args=(chat, msg)).start()
                 else:
                     estado, color = "Ojos cerrados...", (0, 165, 255)
             else:
@@ -200,6 +203,15 @@ def somnolencia(nombre, chat):
                     ard.write(b"b")
                 cerrado, alarma = None, False
                 estado, color = "Despierto", (0, 255, 0)
+        else:
+            sin_rostro = sin_rostro or time.time()
+            if time.time() - sin_rostro >= config.SEG_SIN_ROSTRO:
+                estado, color = "MIRE AL FRENTE!", (0, 0, 255)
+                if not alarma:
+                    alarma = True
+                    hablar("Mire al frente")
+                    if ard:
+                        ard.write(b"B")
         cv2.putText(frame, estado, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
         cv2.putText(frame, "Conductor: " + nombre, (20, h - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         cv2.imshow("Sistema - q para salir", frame)
