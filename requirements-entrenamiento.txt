@@ -1,0 +1,7 @@
+opencv-python==4.11.0.86
+numpy==2.5.2
+tensorflow==2.21.0
+tf_keras==2.21.0
+tf2onnx==1.17.0
+onnx==1.22.0
+protobuf==7.36.1
