@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import subprocess
 import urllib.request
@@ -8,7 +9,7 @@ import db
 import config
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-PY = r"F:\Desktop\.venv\Scripts\python.exe"
+PY = sys.executable 
 
 
 class Gestor(tk.Tk):

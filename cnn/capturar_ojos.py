@@ -6,7 +6,7 @@ import mediapipe as mp
 
 OJO_I = [33, 160, 158, 133, 153, 144]
 OJO_D = [362, 385, 387, 263, 373, 380]
-DIR = "cnn/dataset"
+DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),"dataset")
 
 
 def recorte(gray, pts, idx, m=0.6):

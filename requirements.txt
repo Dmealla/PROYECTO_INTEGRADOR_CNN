@@ -1,5 +1,5 @@
 opencv-contrib-python==4.11.0.86
 mediapipe==0.10.14
-numpy
-pyttsx3
-pyserial
+numpy==2.5.4
+pyttsx3==2.99
+pyserial==3.5

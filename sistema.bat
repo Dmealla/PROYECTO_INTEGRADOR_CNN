@@ -1,3 +1,4 @@
 @echo off
-"F:\Desktop\.venv\Scripts\python.exe" "F:\Desktop\prueba\sistema.py"
+cd /d "%~dp0"
+".venv\Scripts\python.exe" sistema.py
 pause

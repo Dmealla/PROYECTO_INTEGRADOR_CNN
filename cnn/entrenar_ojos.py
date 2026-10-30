@@ -5,8 +5,8 @@ import tensorflow as tf
 import tf_keras as keras
 import tf2onnx
 
-DIR = "cnn/dataset"
-SALIDA = "cnn/ojos.onnx"
+DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset")
+SALIDA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ojos.onnx")
 
 
 def cargar(sesiones):

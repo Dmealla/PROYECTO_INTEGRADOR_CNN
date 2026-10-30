@@ -19,7 +19,8 @@ MP_DRAW = mp.solutions.drawing_utils
 MP_STYLES = mp.solutions.drawing_styles
 FACEMESH = mp.solutions.face_mesh
 
-CNN = cv2.dnn.readNetFromONNX("cnn/ojos.onnx") if os.path.exists("cnn/ojos.onnx") else None
+ONNX = os.path.join(os.path.dirname(os.path.abspath(__file__)),"cnn", "ojos.onnx")
+CNN = cv2.dnn.readNetFromONNX(ONNX) if os.path.exists(ONNX) else None
 
 
 def _recorte_ojo(gray, pts, idx, m=0.6):

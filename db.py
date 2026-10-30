@@ -1,7 +1,8 @@
+import os
 import sqlite3
 import numpy as np
 
-RUTA = "conductores.db"
+RUTA = os.path.join(os.path.dirname(os.path.abspath(__file__)),"conductores.db")
 TAM = 200
 
 
